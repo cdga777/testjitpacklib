@@ -31,6 +31,20 @@ android {
     }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.mindtrust.scutinativesdk'
+            artifactId = 'library'
+            version = '1.1'
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
