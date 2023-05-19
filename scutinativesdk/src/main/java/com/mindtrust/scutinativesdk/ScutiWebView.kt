@@ -27,6 +27,7 @@ enum class TargetEnvironment(val type: String) {
     PRODUCTION("https://store.scutishopping.com/"),
 }
 
+
 class ScutiWebView : Fragment()  {
 
     private var callback: ScutiInterface? = null
@@ -38,11 +39,6 @@ class ScutiWebView : Fragment()  {
     private lateinit var targetEnvironment:TargetEnvironment;
     private lateinit var appId:String;
 
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-
-
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
