@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity(), ScutiInterface {
         transaction.replace(R.id.fragment_webview, scutiWebView)
         transaction.commit()
 
-        scutiWebView.init(TargetEnvironment.DEVELOPMENT, "1e6e003f-0b94-4671-bc35-ccc1b48ce87d")
+        //scutiWebView.init(TargetEnvironment.DEVELOPMENT, "7613de00-a8aa-4af9-b350-850b3eded1d6")
+        scutiWebView.init(TargetEnvironment.PRODUCTION, "6db28ef4-69b0-421a-9344-31318f898790")
 
     }
 
@@ -82,5 +83,22 @@ class MainActivity : AppCompatActivity(), ScutiInterface {
     override fun onScutiButtonClicked() {
         Log.d("INFO", "*-*-*-*-*-*-* OOOO*3*OOOO *-*-*-*-*-*-*");
         webViewLayout.visibility = View.VISIBLE
+    }
+
+    override fun onBackToTheGame() {
+        Log.d("INFO", "*-*-*-*-*-*-* OOOO*4*OOOO *-*-*-*-*-*-*");
+        runOnUiThread { webViewLayout.visibility = View.GONE }
+    }
+
+    override fun onNewProducts(show: Boolean) {
+        runOnUiThread { scutiButton.showNewItemImage(show) }
+    }
+
+    override fun onNewRewards(show: Boolean) {
+        runOnUiThread { scutiButton.showNotificationIcon(show) }
+    }
+
+    override fun onStoreIsReady() {
+        //TODO("Not yet implemented")
     }
 }
