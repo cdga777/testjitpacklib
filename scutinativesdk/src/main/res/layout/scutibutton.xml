@@ -43,7 +43,8 @@
             android:id="@+id/notificationbg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="5dp" />
+            android:maxWidth="5dp"
+            android:src="@drawable/navstepperinactive" />
 
         <TextView
             android:id="@+id/notificatiotxt"
@@ -80,6 +81,7 @@
         android:adjustViewBounds="true"
         android:maxWidth="180dp"
         android:scaleType="fitCenter"
+        android:src="@drawable/new_items_flag"
         app:layout_constraintBottom_toTopOf="@+id/newitemhguide"
         app:layout_constraintEnd_toStartOf="@+id/newitemvguide"
          />
