@@ -14,6 +14,7 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp"
         android:scaleType="fitCenter"
+        android:src="@drawable/scuti_logo_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,9 +43,7 @@
             android:id="@+id/notificationbg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/cardview_light_background"
-            android:maxWidth="5dp"
-            />
+            android:maxWidth="5dp" />
 
         <TextView
             android:id="@+id/notificatiotxt"
@@ -81,7 +80,6 @@
         android:adjustViewBounds="true"
         android:maxWidth="180dp"
         android:scaleType="fitCenter"
-        android:background="@color/cardview_light_background"
         app:layout_constraintBottom_toTopOf="@+id/newitemhguide"
         app:layout_constraintEnd_toStartOf="@+id/newitemvguide"
          />
