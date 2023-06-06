@@ -25,7 +25,7 @@ class ScutiWebView : Fragment()  {
 
     private lateinit var targetEnvironment:TargetEnvironment
     private lateinit var _logSettings: LogSettings
-    var logSettings: LogSettings = LogSettings.VERBOSE
+    var logSettings: LogSettings = LogSettings.ERROR_ONLY
         get() = _logSettings
 
     private lateinit var appId:String
@@ -59,18 +59,14 @@ class ScutiWebView : Fragment()  {
 
                     webView.evaluateJavascript(
                         "if (window && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.unityControl) {\n" +
-                                "     console.log(' ==> IF ---> ');\n" +
                                 "     window.Unity = {\n" +
                                 "         call: function(msg) {\n" +
-                                "             console.log('call1: '+msg);\n" +
                                 "             window.webkit.messageHandlers.unityControl.postMessage(msg);\n" +
                                 "         }\n" +
                                 "     }\n" +
                                 " } else {\n" +
-                                "     console.log(' ==> ELSE ---> '+window.webkit);\n" +
                                 "     window.Unity = {\n" +
                                 "         call: function(msg) {\n" +
-                                "             console.log('call2: '+msg);\n" +
                                 "             JSBridge.showMessageInNative(msg);//window.location = 'unity:' + msg;\n" +
                                 "         }\n" +
                                 "     }\n" +
@@ -158,7 +154,7 @@ class ScutiWebView : Fragment()  {
             //Toast.makeText(context,message, Toast.LENGTH_LONG).show()
             if(view.logSettings.ordinal >= LogSettings.VERBOSE.ordinal)
             {
-                println(message)
+                println("From HTML: "+message)
             }
             when(answer.get("message") as String){
                 ScutiStoreMessages.MSG_BACK_TO_THE_GAME.type -> callback.onBackToTheGame()
@@ -170,7 +166,7 @@ class ScutiWebView : Fragment()  {
                 ScutiStoreMessages.MSG_LOG_OUT.type -> view.clearToken()
                 else -> if(view.logSettings.ordinal >= LogSettings.VERBOSE.ordinal)
                 {
-                    println(message)
+                    println("No Scuti Message: "+message)
                 }
             }
         }
