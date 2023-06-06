@@ -25,7 +25,7 @@ class ScutiWebView : Fragment()  {
 
     private lateinit var targetEnvironment:TargetEnvironment
     private lateinit var _logSettings: LogSettings
-    var logSettings: LogSettings = _logSettings
+    var logSettings: LogSettings = LogSettings.VERBOSE
         get() = _logSettings
 
     private lateinit var appId:String
