@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -78,6 +80,18 @@ class ScutiWebView : Fragment()  {
 
                 }
 
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
+                {
+                    println("HTML Error: "+error.toString())
+                }
             }
         }
         webView.settings.domStorageEnabled = true
