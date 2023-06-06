@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -88,9 +89,23 @@ class ScutiWebView : Fragment()  {
                 error: WebResourceError?
             ) {
                 super.onReceivedError(view, request, error)
+                println("HTML Error: "+error.toString())
                 if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
                 {
-                    println("HTML Error: "+error.toString())
+                    println(" * HTML Error: "+error.toString())
+                }
+            }
+
+            override fun onReceivedHttpError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                errorResponse: WebResourceResponse?
+            ) {
+                super.onReceivedHttpError(view, request, errorResponse)
+                println("HTTP Error: "+errorResponse.toString())
+                if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
+                {
+                    println(" * HTTP Error: "+errorResponse.toString())
                 }
             }
         }
