@@ -90,10 +90,10 @@ class ScutiWebView : Fragment()  {
         webView.webChromeClient = object : WebChromeClient() {
 
             override fun onConsoleMessage(message: ConsoleMessage): Boolean {
-                println("ConsoleMessage: "+message.toString())
+                println("ConsoleMessage: "+message.messageLevel()+" "+message.message())
                 if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
                 {
-                    println(" * ConsoleMessage: "+message.toString())
+                    println(" * ConsoleMessage: "+message.message()+" "+message.message())
                 }
                 Log.d("MyApplication", "${message.message()} -- From line " +
                         "${message.lineNumber()} of ${message.sourceId()}")
