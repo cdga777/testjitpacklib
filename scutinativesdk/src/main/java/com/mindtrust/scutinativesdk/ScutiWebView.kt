@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ConsoleMessage
 import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -83,32 +85,22 @@ class ScutiWebView : Fragment()  {
 
             }
 
-            override fun onReceivedError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?
-            ) {
-                super.onReceivedError(view, request, error)
-                println("HTML Error: "+error.toString())
-                if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
-                {
-                    println(" * HTML Error: "+error.toString())
-                }
-            }
+        }
 
-            override fun onReceivedHttpError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                errorResponse: WebResourceResponse?
-            ) {
-                super.onReceivedHttpError(view, request, errorResponse)
-                println("HTTP Error: "+errorResponse.toString())
+        webView.webChromeClient = object : WebChromeClient() {
+
+            override fun onConsoleMessage(message: ConsoleMessage): Boolean {
+                println("ConsoleMessage: "+message.toString())
                 if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
                 {
-                    println(" * HTTP Error: "+errorResponse.toString())
+                    println(" * ConsoleMessage: "+message.toString())
                 }
+                Log.d("MyApplication", "${message.message()} -- From line " +
+                        "${message.lineNumber()} of ${message.sourceId()}")
+                return true
             }
         }
+
         webView.settings.domStorageEnabled = true
         //webView.settings.databaseEnabled = true;
 
