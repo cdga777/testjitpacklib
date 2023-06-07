@@ -54,12 +54,8 @@ class ScutiWebView : Fragment()  {
             override fun onPageFinished(view: WebView, url: String) {
 
                 if (url.startsWith("unity:")) {
-                    if(logSettings.ordinal >= LogSettings.VERBOSE.ordinal)
-                    {
-                        val message = url.substring(6);
-                        Log.d("INFO", " unity: "+message);
-                    }
-
+                    val message = url.substring(6);
+                    ScutiLogger.getInstance().log(" unity: $message")
                 } else {
 
                     webView.evaluateJavascript(
@@ -90,13 +86,16 @@ class ScutiWebView : Fragment()  {
         webView.webChromeClient = object : WebChromeClient() {
 
             override fun onConsoleMessage(message: ConsoleMessage): Boolean {
-                println("ConsoleMessage: "+message.messageLevel()+" "+message.message())
-                if(_logSettings.ordinal >= LogSettings.ERROR_ONLY.ordinal)
-                {
-                    println(" * ConsoleMessage: "+message.message()+" "+message.message())
+                when(message.messageLevel()){
+                    ConsoleMessage.MessageLevel.ERROR -> ScutiLogger.getInstance().logError("${message.message()} -- From line ${message.lineNumber()} of ${message.sourceId()}")
+                    ConsoleMessage.MessageLevel.LOG -> {
+                        if(message.message().lowercase().contains("error"))
+                            ScutiLogger.getInstance().logError("${message.message()} -- From line ${message.lineNumber()} of ${message.sourceId()}")
+                        else
+                            ScutiLogger.getInstance().log("${message.message()} -- From line ${message.lineNumber()} of ${message.sourceId()}")
+                    }
+                    else -> ScutiLogger.getInstance().log("${message.message()} -- From line ${message.lineNumber()} of ${message.sourceId()}")
                 }
-                Log.d("MyApplication", "${message.message()} -- From line " +
-                        "${message.lineNumber()} of ${message.sourceId()}")
                 return true
             }
         }
@@ -117,6 +116,7 @@ class ScutiWebView : Fragment()  {
     fun  init(environment:TargetEnvironment, id:String, logSettings: LogSettings) {
         targetEnvironment = environment
         _logSettings = logSettings
+        ScutiLogger.getInstance().setLogSettings(_logSettings)
         appId = id
         base_url = targetEnvironment.type+"?gameId="+appId+"&platform=Unity"
     }
@@ -140,7 +140,7 @@ class ScutiWebView : Fragment()  {
     }
 
     fun setUserId(userId:String) {
-        webView.evaluateJavascript("setGameUserId(\""+userId+"\");", null)
+        webView.evaluateJavascript("setGameUserId(\"$userId\");", null)
     }
 
     internal fun saveToken(token:String){
@@ -172,11 +172,7 @@ class ScutiWebView : Fragment()  {
         fun showMessageInNative(message:String){
             val callback = context as ScutiInterface
             val answer = JSONObject(message)
-            //Toast.makeText(context,message, Toast.LENGTH_LONG).show()
-            if(view.logSettings.ordinal >= LogSettings.VERBOSE.ordinal)
-            {
-                println("From HTML: "+message)
-            }
+            ScutiLogger.getInstance().log("From HTML: $message")
             when(answer.get("message") as String){
                 ScutiStoreMessages.MSG_BACK_TO_THE_GAME.type -> callback.onBackToTheGame()
                 ScutiStoreMessages.MSG_SCUTI_EXCHANGE.type -> callback.onScutiExchange((answer.get("payload") as Int).toString())
@@ -185,10 +181,8 @@ class ScutiWebView : Fragment()  {
                 ScutiStoreMessages.MSG_USER_TOKEN.type -> view.saveToken(answer.get("payload") as String)
                 ScutiStoreMessages.MSG_STORE_IS_READY.type -> callback.onStoreIsReady()
                 ScutiStoreMessages.MSG_LOG_OUT.type -> view.clearToken()
-                else -> if(view.logSettings.ordinal >= LogSettings.VERBOSE.ordinal)
-                {
-                    println("No Scuti Message: "+message)
-                }
+                else -> ScutiLogger.getInstance().log("No Scuti Message: $message")
+
             }
         }
     }
